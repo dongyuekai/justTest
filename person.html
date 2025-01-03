@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>数字人</title>
   <style>
     body {
@@ -14,15 +15,15 @@
       justify-content: center;
       background: #f0f0f0;
       font-family: Arial, sans-serif;
+      overflow: hidden;
     }
 
     .digital-human {
       position: relative;
-      width: 300px;
-      height: 300px;
+      width: 260px;
+      height: 260px;
       background: #ffdbac;
       border-radius: 50% 50% 45% 45%;
-      position: relative;
     }
 
     .eyes {
@@ -176,6 +177,52 @@
       opacity: 1;
       animation: show-message 4s forwards;
     }
+
+    @media (max-width: 768px) {
+      .digital-human {
+        width: 200px;
+        height: 200px;
+      }
+
+      .eye {
+        width: 30px;
+        height: 30px;
+      }
+
+      .eye::after {
+        width: 15px;
+        height: 15px;
+      }
+
+      .mouth {
+        width: 50px;
+        height: 25px;
+      }
+
+      .chat-bubble {
+        top: -60px;
+        right: -80px;
+        padding: 10px;
+        font-size: 14px;
+        max-width: 150px;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding: 0 20px;
+      }
+
+      button {
+        padding: 15px 25px;
+        font-size: 16px;
+        min-width: 100px;
+        touch-action: manipulation;
+      }
+    }
   </style>
 </head>
 
@@ -190,28 +237,72 @@
   </div>
 
   <div class="controls">
-    <button onclick="speak('你好！很高兴见到你！')">打招呼</button>
-    <button onclick="speak('我可以帮你回答问题。')">介绍</button>
-    <button onclick="speak('祝你今天心情愉快！')">告别</button>
+    <button onclick="speak('你好！很高兴见到你！')" ontouchstart="speak('你好！很高兴见到你！')">打招呼</button>
+    <button onclick="speak('我可以帮你回答问题。')" ontouchstart="speak('我可以帮你回答问题。')">介绍</button>
+    <button onclick="speak('祝你今天心情愉快！')" ontouchstart="speak('祝你今天心情愉快！')">告别</button>
   </div>
 
   <script>
+    document.addEventList t', function(event) {      hes.length > 1) {
+   ventDefault();
+            alse });
+
+    docum tener('gesturestart', v       {
+      event.preventDefault();
+    });
+
+    le t speaking        se;
+
     function speak(text) {
+      if (speaking) return;
+      speaking = true;
+
       const bubble = document.getElementById('chatBubble');
       bubble.textContent = text;
       bubble.style.animation = 'none';
-      bubble.offsetHeight; // 触发重排
+      bubble.offsetHeight;
       bubble.style.animation = 'show-message 4s forwards';
 
-      // 如果浏览器支持语音合成
       if ('speechSynthesis' in window) {
+        speechSynthesis.cancel();
+
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'zh-CN';
-        speechSynthesis.speak(utterance);
+        utterance.volume = 1.0;
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+
+        utterance.onend = function() {
+          speaking = false;
+        };
+
+        utterance.onerror = function() {
+          speaking = false;
+        };
+
+        if (window.plugins && window.plugins.tts) {
+          window.plugins.tts.speak(text);
+         } else {
+          speechSynthesis.speak(utterance);
+        }
+
+        setTime out((               speaking =                 00);
       }
     }
 
-    // 随机眨眼
+    function initSpeechS         {
+      if ('speechSynthesis' i      ) {
+             ynthesis.getVoices();
+      }
+          ind      entListener('load',        hSynthesis);
+
+          .addEventL    r(  ibi  change', function() {
+      if (d    t.hidden) {
+        speechSynthesis      );
+        speaking = false;
+      }
+      });
+
     setInterval(() => {
       const eyes = document.querySelectorAll('.eye');
       eyes.forEach(eye => {
